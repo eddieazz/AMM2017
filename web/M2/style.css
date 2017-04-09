@@ -113,6 +113,11 @@ input[type=submit]:active{
     transform: translateY(4px);
 }
 
+label::after, label::before {
+content: '\A';
+white-space: pre;
+}
+
 #sidebar li {
     list-style: none;
 }

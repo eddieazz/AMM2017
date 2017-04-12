@@ -11,53 +11,99 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="keywords" content="HTML, AMM">
-        <meta name="description" content="Milestone 1 del progetto 2017 di AMM">
+        <meta name="description" content="Milestone 2 del progetto 2017 di AMM">
         <meta name="author" content="Edoardo Azzaro">
     </head>
     <body>
         <div id="page">
             <header>
                 <div id="header">
-                    <h2><a href="profilo.html">PROFILO</a></h2>
-                    <h2>BACHECA</h2>
+                    <h1>NerdBook</h1>
                 </div>
             </header>
-
+            
+            <nav>
+                <ol>
+                    <li><a href="profilo.html">Profilo</a></li>
+                    <li class="active"><a href="bacheca.html">Bacheca</a></li>
+                </ol>
+            </nav>
+            
             <div id="sidebar">
                 <ul>
                     <li><h3>Persone</h3></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
+                    <li><a href="profilo.html">Adrian Fahrenheit Ţepeş</a></li>
+                    <li><a href="profilo.html">Richter Belmont</a></li>
                 </ul>
+                
+                <ul>
+                    <li><h3>Gruppi</h3></li>
+                    <li><a href="profilo.html">Castlemaniaci</a></li>
+                    <li><a href="profilo.html">Calistenici</a></li>
+                </ul>
+                
             </div>
             
             <div id="content">
-                <div class="post">
-                    <p>Edoardo Azzaro</p>
-                    <img title="edoardo" alt="Foto di Edoardo Azzaro" src="../../src/images/edoardo.jpg" width="150" height="150"/>
-                    <p>Proviamo questo nuovo social!</p>
+                                
+                <div id="formNewPost">
+                    <form method="post" action="bacheca.html">
+                        <div>
+                            <label for="textPost">Testo nuovo post</label>
+                            <input type="text" name="textPost" id="textPost">
+                        </div>
+                        <div>
+                            <label for="urlPost">URL allegato</label>
+                            <input type="text" name="urlPost" id="urlPost">
+                        </div>
+
+                        <div>
+                            <label for="imgType">Post con Foto</label>
+                            <input type="radio" name="postType" value="imgType" id="imgType">
+                            <label for="linkType">Link</label>
+                            <input type="radio" name="postType" value="linkType" id="linkType">
+                        </div>
+                        <br>
+                        <br>
+                        <input type="submit" value="Crea Post"/>
+                    </form>
                 </div>
-                <div class="post">
-                    <p>Adrian Fahrenheit Ţepeş</p>
-                    <img title="alucard" alt="Foto di Alucard" src="../../src/images/alucard.jpg" width="150" height="150"/>
-                    <p>Oggi mi sento un po' anemico...</p>
-                    <img title="trueblood" alt="Foto del True Blood" src="../../src/images/trueblood.jpg" width="300" height="300"/>
-                </div>
-                <div class="post">
-                    <p>Richter Belmont</p>
-                    <img title="richter" alt="Foto di Richter Belmont" src="../../src/images/richter.jpg" width="150" height="150"/>
-                    <p>Tutto il giorno su e giù per 'sto castello, non ci vedo più dalla fame!</p>
-                    <a href="http://fantasyanime.com/valhalla/castlevaniasotn/images/castlevsotnMap-Castle1_25x.jpg">link</a>
-                    <br />
-                </div>
+               
                 <br />
-                <hr />
                 <br />
-            </div>
-            <div id="footer">
-                <p>Progetto AMM 2017 - Autore: Edoardo Azzaro</p>
-            </div> 
+                
+                <div class="user">
+                    <div class="profilePic">
+                        <img title="edoardo" alt="Foto di Edoardo Azzaro" src="../../src/images/edoardo.jpg" width="150" height="150"/>
+                    </div>
+                    <div>
+                        <h3>Edoardo Azzaro</h3>
+                        <p>Proviamo questo nuovo social!</p>
+                    </div>
+                </div>
+                <div class="user">
+                    <div class="profilePic">
+                        <img title="alucard" alt="Foto di Alucard" src="../../src/images/alucard.jpg" width="150" height="150"/>
+                    </div>
+                    <div>
+                        <h3>Adrian Fahrenheit Ţepeş</h3>
+                        <p>Oggi mi sento un po' anemico...</p>
+                    </div>
+                    <div>
+                        <img title="trueblood" alt="Foto del True Blood" src="../../src/images/trueblood.jpg" width="300" height="300"/>
+                    </div>
+                </div>
+                <div class="user">
+                    <div class="profilePic">
+                        <img title="richter" alt="Foto di Richter Belmont" src="../../src/images/richter.jpg" width="150" height="150"/>
+                    </div>
+                    <div>
+                        <h3>Richter Belmont</h3>
+                        <p>Tutto il giorno su e giù per 'sto castello, non ci vedo più dalla fame!</p>
+                        <a href="http://fantasyanime.com/valhalla/castlevaniasotn/images/castlevsotnMap-Castle1_25x.jpg">link</a>
+                    </div>
+                </div>
+            </div>            
         </div>
     </body>
 </html>

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nerdbook.classi;
+package com.nerdbook.classi;
 
 import java.util.ArrayList;
 
@@ -76,9 +76,9 @@ public class UserFactory {
         return null;
     }
     
-    public int getIdByNameAndPassword(String name, String password){
+    public int getIdByUsernameAndPassword(String username, String password){
         for(User user : this.listaUsers){
-            if(user.getNome().equals(name) && user.getPassword().equals(password)){
+            if(user.getNome().equals(username) && user.getPassword().equals(password)){
                 return user.getId();
             }
         }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nerdbook.classi;
+package com.nerdbook.classi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +75,8 @@ public class PostFactory {
         return listaPost;
     }
     
-    List<Post> getPostList(Gruppo grp) {
+    
+    public List getPostList(Gruppo grp) {
         
         List<Post> listaPost = new ArrayList<Post>();
         

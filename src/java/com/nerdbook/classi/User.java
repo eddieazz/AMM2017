@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nerdbook.classi;
+package com.nerdbook.classi;
 
 /**
  *
@@ -145,8 +145,10 @@ public class User {
         this.frasePresentazione = frasePresentazione;
     }
     
-    
-    
-    
-    
+    @Override
+    public boolean equals (Object altroUser) {
+        if (altroUser instanceof User)
+            if (this.getId() == ((User)altroUser).getId()) return true;
+        return false;
+    }
 }

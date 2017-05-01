@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nerdbook.classi;
+package com.nerdbook.classi;
 
 /**
  *
@@ -12,17 +12,35 @@ package nerdbook.classi;
 public class Gruppo {
         
     //Attributi
+    private String name;
     private int id;
     private Post post;
     private User user;
     private User amministratore;
+    private String descrizione;
     
     //Costruttore
     public Gruppo() {
+        name = "";
         id = 0;
         post = null;
         user = null;
         amministratore = null;
+        descrizione = "";
+    }
+    
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -79,5 +97,26 @@ public class Gruppo {
      */
     public void setAmministratore(User amministratore) {
         this.amministratore = amministratore;
+    }
+
+    /**
+     * @return the descrizione
+     */
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    /**
+     * @param descrizione the descrizione to set
+     */
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
+    
+    @Override
+    public boolean equals (Object altroGruppo) {
+        if (altroGruppo instanceof Gruppo)
+            if (this.getId() == ((Gruppo)altroGruppo).getId()) return true;
+        return false;
     }
 }

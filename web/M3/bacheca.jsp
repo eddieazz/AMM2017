@@ -4,14 +4,88 @@
     Author     : edoar
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <link rel="stylesheet" type="text/css" href="style.css" media="screen">
+        <title>Bacheca</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="keywords" content="HTML, AMM">
+        <meta name="description" content="Milestone 3 del progetto 2017 di AMM">
+        <meta name="author" content="Edoardo Azzaro">
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <div id="page">
+
+            <!--header contenente in titolo della pagina-->
+            <c:set var="header" value="Bacheca" scope="request"/>
+            <jsp:include page="header.jsp"/>
+            
+            <!--Barra di navigazione tra le pagine del sito-->
+            <c:set var="page" value="Bacheca" scope="request"/>
+            <jsp:include page="nav.jsp"/>
+
+            <div id="sidebar">
+                <ul>
+                    <li><h3>Persone</h3></li>
+                    <li><a href="profilo.html">Adrian Fahrenheit Ţepeş</a></li>
+                    <li><a href="profilo.html">Richter Belmont</a></li>
+                </ul>
+                
+                <ul>
+                    <li><h3>Gruppi</h3></li>
+                    <li><a href="profilo.html">Castlemaniaci</a></li>
+                    <li><a href="profilo.html">Calistenici</a></li>
+                </ul>
+                
+            </div>
+            
+            <div id="content">
+                                
+                <div id="formNewPost">
+                    <form method="post" action="bacheca.html">
+                        <div>
+                            <label for="textPost">Testo nuovo post</label>
+                            <input type="text" name="textPost" id="textPost">
+                        </div>
+                        <div>
+                            <label for="urlPost">URL allegato</label>
+                            <input type="text" name="urlPost" id="urlPost">
+                        </div>
+
+                        <div>
+                            <label for="imgType">Post con Foto</label>
+                            <input type="radio" name="postType" value="imgType" id="imgType">
+                            <label for="linkType">Link</label>
+                            <input type="radio" name="postType" value="linkType" id="linkType">
+                        </div>
+                        <br>
+                        <br>
+                        <input type="submit" value="Crea Post"/>
+                    </form>
+                </div>
+               
+                <br />
+                <br />
+                
+                <!--lista dei post-->
+                <div id="posts">
+                    <c:forEach var="post" items="${posts}">
+                        <div class="post">
+                            <c:if test="${post.postType == 'TEXT'}">
+                                <p>${post.content}</p>
+                            </c:if>
+                            <c:if test="${post.postType == 'IMAGE'}">
+                                <img alt="Post con foto" src="${post.content}">
+                            </c:if>
+                        </div>
+                    </c:forEach>
+                </div>
+                
+            </div>            
+        </div>
     </body>
 </html>

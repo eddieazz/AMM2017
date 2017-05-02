@@ -4,10 +4,11 @@
     Author     : edoar
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <header>
     <div id="header">
-        <h1>NerdBook</h1>
+        NerdBook - ${header}
     </div>
 </header>

@@ -41,29 +41,41 @@ public class UserFactory {
         
         //Alucard
         User user2 = new User();
-        user1.setId(1);
-        user1.setNome("Adrian Fahrenheit");
-        user1.setCognome ("Ţepeş");
-        user1.setEmail("alucard.sonofdracula@gmail.com");
-        user1.setUrlFotoProfilo("images/alucard.jpg");
-        user1.setDataDiNascita ("04/11/1413");
-        user1.setPassword("123");
-        user1.setFrasePresentazione("Figlio di Dracula, sostenitore dell'umanità!");
+        user2.setId(1);
+        user2.setNome("Adrian Fahrenheit");
+        user2.setCognome ("Ţepeş");
+        user2.setEmail("alucard.sonofdracula@gmail.com");
+        user2.setUrlFotoProfilo("images/alucard.jpg");
+        user2.setDataDiNascita ("04/11/1413");
+        user2.setPassword("123");
+        user2.setFrasePresentazione("Figlio di Dracula, sostenitore dell'umanità!");
         
         //Richter
         User user3 = new User();
-        user1.setId(2);
-        user1.setNome("Richter");
-        user1.setCognome ("Belmont");
-        user1.setEmail("richter.belmont@gmail.com");
-        user1.setUrlFotoProfilo("images/richter.jpg");
-        user1.setDataDiNascita ("13/09/1773");
-        user1.setPassword("123");
-        user1.setFrasePresentazione("Cacciatore di vampiri per professione!");
+        user3.setId(2);
+        user3.setNome("Richter");
+        user3.setCognome ("Belmont");
+        user3.setEmail("richter.belmont@gmail.com");
+        user3.setUrlFotoProfilo("images/richter.jpg");
+        user3.setDataDiNascita ("13/09/1773");
+        user3.setPassword("123");
+        user3.setFrasePresentazione("Cacciatore di vampiri per professione!");
+        
+        //Utente incompleto
+        User user4 = new User();
+        user4.setId(3);
+        user4.setNome(null);
+        user4.setCognome (null);
+        user4.setEmail(null);
+        user4.setUrlFotoProfilo(null);
+        user4.setDataDiNascita (null);
+        user4.setPassword(null);
+        user4.setFrasePresentazione(null);
         
         listaUsers.add(user1);
         listaUsers.add(user2);
         listaUsers.add(user3);
+        listaUsers.add(user4);
     
       }
       

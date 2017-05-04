@@ -21,7 +21,7 @@
         <div id="page">
 
             <!--header contenente in titolo della pagina-->
-            <c:set var="header" value="Bacheca" scope="request"/>
+            <c:set var="header" value="Bacheca Personale" scope="request"/>
             <jsp:include page="header.jsp"/>
             
             <!--Barra di navigazione tra le pagine del sito-->
@@ -46,14 +46,14 @@
             <div id="content">
                                 
                 <div id="formNewPost">
-                    <form method="post" action="bacheca.html">
+                    <form action="servlet.java" method="post" >
                         <div>
                             <label for="textPost">Testo nuovo post</label>
-                            <input type="text" name="textPost" id="textPost">
+                            <input type="text" name="postType" value="textType" id="textType">
                         </div>
                         <div>
                             <label for="urlPost">URL allegato</label>
-                            <input type="text" name="urlPost" id="urlPost">
+                            <input type="text" name="postType" value="urlType"  id="urlType">
                         </div>
 
                         <div>

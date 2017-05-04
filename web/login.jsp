@@ -29,14 +29,14 @@
                 </c:if>
                     
                 <h2>LOGIN</h2>
-                <form method="post" action="login.html">
+                <form action="Login" method="post" >
                     <div class="riga">
-                        <label for="utente">Nome utente</label>
-                        <input name="utente" id="utente" type="text"/>
+                        <label for="userName">Nome utente</label>
+                        <input name="username" id="userName" type="text"/>
                     </div>
                     <div class="riga">
-                        <label for="psw">Password</label>
-                        <input name="psw" id="psw" type="password"/>
+                        <label for="userPass">Password</label>
+                        <input name="password" id="userPass" type="password"/>
                     </div><br />
                     <input type="submit" value="Login"/>
                 </form>

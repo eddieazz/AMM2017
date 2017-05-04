@@ -7,7 +7,6 @@ package com.nerdbook;
 
 import com.nerdbook.classi.UserFactory;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +40,7 @@ public class Login extends HttpServlet {
         {
             session.invalidate();
             request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
         }
         
         //Se esiste un attributo di sessione loggedIn e questo vale true
@@ -48,6 +48,7 @@ public class Login extends HttpServlet {
         if (session.getAttribute("loggedIn") != null && session.getAttribute("loggedIn").equals(true))
         {
             request.getRequestDispatcher("Bacheca").forward(request, response);
+            return;
             //Se l'utente non è loggato...
         } else {
             String username = request.getParameter("username");
@@ -57,37 +58,23 @@ public class Login extends HttpServlet {
             {
                 int loggedUserID = UserFactory.getInstance().getIdByUsernameAndPassword(username, password);
                 
-                //se l'utente è valido...
-                if(loggedUserID!=-1)
+                //se l'id utente è 0 o maggiore
+                if(loggedUserID != -1)
                 {
                     session.setAttribute("loggedIn", true);
                     session.setAttribute("loggedUserID", loggedUserID);
                     
                     request.getRequestDispatcher("Bacheca").forward(request, response);
-                } else { //altrimenti se la coppia user/pass non è valida (id==-1)
+                    return;
+                } else { //se id == -1
                     
                     //ritorno al form del login informandolo che i dati non sono validi
                     request.setAttribute("invalidData", true);
-                    request.getRequestDispatcher("loginForm.jsp").forward(request, response);
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    return;
                 }
             }
         }
-        
-        /*
-        try (PrintWriter out = response.getWriter()) {
-            
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Login</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Login at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-            
-        }
-        */
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -10,7 +10,6 @@ import com.nerdbook.classi.PostFactory;
 import com.nerdbook.classi.User;
 import com.nerdbook.classi.UserFactory;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -71,20 +70,6 @@ public class Bacheca extends HttpServlet {
         else{
             request.getRequestDispatcher("Login").forward(request, response);
         }
-        
-        /*
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Bacheca</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Bacheca at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-        */
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

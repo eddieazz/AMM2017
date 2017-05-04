@@ -1,9 +1,12 @@
+<%-- 
+    Document   : descrizione
+    Created on : 2-mag-2017, 13.02.20
+    Author     : edoar
+--%>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="style.css" media="screen">
@@ -11,16 +14,16 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="keywords" content="HTML, AMM">
-        <meta name="description" content="Milestone 2 del progetto 2017 di AMM">
+        <meta name="description" content="Milestone 3 del progetto 2017 di AMM">
         <meta name="author" content="Edoardo Azzaro">
     </head>
     <body>
         <div id="page">
-            <header>
-                <div id="header">
-                    <h1>Nerdbook</h1>
-                </div>
-            </header>
+            
+            <!--header contenente in titolo della pagina-->
+            <c:set var="header" value="Descrizione" scope="request"/>
+            <jsp:include page="header.jsp"/>
+            
             <div id="sidebar">
             <ul>
                 <li><h3>Navigazione</h3></li>
@@ -29,6 +32,7 @@ and open the template in the editor.
                 <li><a href="#login">Vai al login</a></li>
             </ul>
             </div>
+            
             <div id="content">
                 <a id='titolo'>
                     <h1>Nerdbook</h1>
@@ -51,7 +55,7 @@ and open the template in the editor.
                     <a id='login'>
                         <h2>LOGIN</h2>
                     </a>
-                    <p>Per fare il Login premi <a href="login.html">QUI</a></p>
+                    <p>Per fare il Login premi <a href="login.jsp">QUI</a></p>
                 </nav>
             </div>
         </div>

@@ -75,7 +75,7 @@ public class PostFactory {
         return listaPost;
     }
     
-    
+    /*
     public List getPostList(Gruppo grp) {
         
         List<Post> listaPost = new ArrayList<Post>();
@@ -87,4 +87,5 @@ public class PostFactory {
         }
         return listaPost;
     }
+    */
 }

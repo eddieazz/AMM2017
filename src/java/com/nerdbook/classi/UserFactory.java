@@ -42,7 +42,7 @@ public class UserFactory {
         //Alucard
         User user2 = new User();
         user2.setId(1);
-        user2.setNome("Adrian Fahrenheit");
+        user2.setNome("Alucard");
         user2.setCognome ("Ţepeş");
         user2.setEmail("alucard.sonofdracula@gmail.com");
         user2.setUrlFotoProfilo("images/alucard.jpg");

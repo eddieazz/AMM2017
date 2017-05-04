@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -31,6 +32,18 @@ public class Profilo extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
+        HttpSession session = request.getSession();
+        
+        //se la sessione esiste ed esiste anche l'attributo loggedIn impostato a true
+        if(session!=null && session.getAttribute("loggedIn")!=null && session.getAttribute("loggedIn").equals(true))
+        {
+            
+            
+        } else 
+        {
+            
+        }
+
         /*
         try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");

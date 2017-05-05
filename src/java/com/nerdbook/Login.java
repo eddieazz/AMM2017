@@ -6,6 +6,8 @@
 package com.nerdbook;
 
 import com.nerdbook.classi.UserFactory;
+import com.nerdbook.classi.User;
+import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -64,8 +66,19 @@ public class Login extends HttpServlet {
                     session.setAttribute("loggedIn", true);
                     session.setAttribute("loggedUserID", loggedUserID);
                     
-                    request.getRequestDispatcher("Bacheca").forward(request, response);
-                    return;
+                    //verifico che almeno i 4 campi principali siano stati inseriti
+                    if(UserFactory.getInstance().getUserById(loggedUserID).getNome() != null ||
+                            UserFactory.getInstance().getUserById(loggedUserID).getCognome() != null ||
+                            UserFactory.getInstance().getUserById(loggedUserID).getUrlFotoProfilo() != null ||
+                            UserFactory.getInstance().getUserById(loggedUserID).getFrasePresentazione() != null)
+                    {
+                        request.getRequestDispatcher("Bacheca").forward(request, response);
+                        return;
+                    } else {
+                        request.getRequestDispatcher("profilo.jsp").forward(request, response);
+                    }
+                    
+                    
                 } else { //se id == -1
                     
                     //ritorno al form del login informandolo che i dati non sono validi

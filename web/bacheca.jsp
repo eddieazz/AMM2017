@@ -28,20 +28,9 @@
             <c:set var="page" value="Bacheca" scope="request"/>
             <jsp:include page="nav.jsp"/>
 
-            <div id="sidebar">
-                <ul>
-                    <li><h3>Persone</h3></li>
-                    <li><a href="profilo.html">Adrian Fahrenheit Ţepeş</a></li>
-                    <li><a href="profilo.html">Richter Belmont</a></li>
-                </ul>
-                
-                <ul>
-                    <li><h3>Gruppi</h3></li>
-                    <li><a href="profilo.html">Castlemaniaci</a></li>
-                    <li><a href="profilo.html">Calistenici</a></li>
-                </ul>
-                
-            </div>
+            <!--Sidebar contenente utenti e gruppi-->
+            <c:set var="sidebar" value="Sidebar" scope="request"/>
+            <jsp:include page="sidebar.jsp"/>
             
             <div id="content">
                                 

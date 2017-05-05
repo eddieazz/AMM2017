@@ -68,7 +68,7 @@ public class Bacheca extends HttpServlet {
             }
         }
         else{
-            request.getRequestDispatcher("Login").forward(request, response);
+            request.setAttribute("invalidData", true);
         }
     }
 

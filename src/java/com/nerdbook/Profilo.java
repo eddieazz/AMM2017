@@ -6,7 +6,6 @@
 package com.nerdbook;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,26 +36,15 @@ public class Profilo extends HttpServlet {
         //se la sessione esiste ed esiste anche l'attributo loggedIn impostato a true
         if(session!=null && session.getAttribute("loggedIn")!=null && session.getAttribute("loggedIn").equals(true))
         {
-            
-            
+            request.getRequestDispatcher("profilo.jsp").forward(request, response);
+            return;
         } else 
         {
-            
+            //ritorno al form del login informandolo che i dati non sono validi
+            request.setAttribute("invalidData", true);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
         }
-
-        /*
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Profilo</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Profilo at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-        */
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

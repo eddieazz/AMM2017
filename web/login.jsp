@@ -32,11 +32,11 @@
                 <form action="Login" method="post" >
                     <div class="riga">
                         <label for="userName">Nome utente</label>
-                        <input name="username" id="userName" type="text"/>
+                        <input type="text" id="userName" name="username"/>
                     </div>
                     <div class="riga">
                         <label for="userPass">Password</label>
-                        <input name="password" id="userPass" type="password"/>
+                        <input type="password" id="userPass" name="password"/>
                     </div><br />
                     <input type="submit" value="Login"/>
                 </form>

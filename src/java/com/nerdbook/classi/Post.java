@@ -20,14 +20,8 @@ public class Post {
     private User user;
     private String content;
     private Type postType;
+    private String imagePost;
 
-    //Costruttore
-    public Post() {
-        id = 0;
-        user = null;
-        content = "";
-        postType = Type.TEXT;
-    }
 
     /**
      * @return the id
@@ -71,6 +65,20 @@ public class Post {
         this.content = content;
     }
 
+    /**
+     * @return the imagePost
+     */
+    public String getImagePost(){
+        return imagePost;
+    }
+    
+    /**
+     * @param content the imagePost to set
+     */
+    public void setImagePost(String content) {
+        this.imagePost = content;
+    }
+    
     /**
      * @return the postType
      */

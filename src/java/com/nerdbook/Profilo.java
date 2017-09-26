@@ -5,12 +5,18 @@
  */
 package com.nerdbook;
 
+import com.nerdbook.classi.Gruppo;
+import com.nerdbook.classi.GruppoFactory;
+import com.nerdbook.classi.User;
+import com.nerdbook.classi.UserFactory;
+
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  *
@@ -31,22 +37,55 @@ public class Profilo extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        HttpSession session = request.getSession();
-        
-        //se la sessione esiste ed esiste anche l'attributo loggedIn impostato a true
-        if(session!=null && session.getAttribute("loggedIn")!=null && session.getAttribute("loggedIn").equals(true))
-        {
-            request.getRequestDispatcher("profilo.jsp").forward(request, response);
-            return;
-        } else 
-        {
-            //ritorno al form del login informandolo che i dati non sono validi
-            request.setAttribute("invalidData", true);
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
+        if (Controlli.sessionExist(request)) {
+
+            User user = Controlli.getUserLogged(request);
+
+            List<User> friends = UserFactory.getInstance().getRegisteredUser();
+            if (user != null) {
+                request.setAttribute("utenteLoggato", user);
+                request.setAttribute("amiciUtente", friends);
+
+                List<Gruppo> groups = GruppoFactory.getInstance().allGroups();
+                request.setAttribute("gruppitUente", groups);
+
+                if (request.getParameter("confermaDati") != null) {
+                    if (getDatiProfilo(request) == true) {
+                        request.setAttribute("risultatoProfilo", "dati inseriti con successo");
+                    } else {
+                        request.setAttribute("risultatoProfilo", "le password non coincidono!");
+                    }
+                }
+
+                request.getRequestDispatcher("profilo.jsp").forward(request, response);
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
+        } else {
+            request.getRequestDispatcher("Login").forward(request, response);
         }
     }
 
+    
+    public boolean getDatiProfilo(HttpServletRequest request) {
+
+        String nomeUtente = request.getParameter("nomeUtente");
+        String cognomeUtente = request.getParameter("cognomeUtente");
+        String dataDiNascita = request.getParameter("dataDiNascita");
+        String frasePresentazione = request.getParameter("frasePresentazione");
+        String password = request.getParameter("password");
+        String confermaPassword = request.getParameter("confermaPassword");
+
+        User user = Controlli.getUserLogged(request);
+
+        if (password.equals(confermaPassword)){      
+            UserFactory.getInstance().setDatiProfilo(nomeUtente, cognomeUtente, dataDiNascita, password, frasePresentazione, user.getId());
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

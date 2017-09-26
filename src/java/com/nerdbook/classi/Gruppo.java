@@ -5,6 +5,9 @@
  */
 package com.nerdbook.classi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author edoar
@@ -14,19 +17,17 @@ public class Gruppo {
     //Attributi
     private String name;
     private int id;
-    private Post post;
-    private User user;
+    private List<Post> postList;
+    private List<User> members;
     private User amministratore;
     private String descrizione;
     
     //Costruttore
     public Gruppo() {
-        name = "";
-        id = 0;
-        post = null;
-        user = null;
-        amministratore = null;
-        descrizione = "";
+        this.name = "";
+        this.id = 0;
+        postList = new ArrayList<>();
+        members = new ArrayList<>();
     }
     
     /**
@@ -60,29 +61,30 @@ public class Gruppo {
     /**
      * @return the post
      */
-    public Post getPost() {
-        return post;
+    public List getPostList() {
+        return postList;
     }
 
-    /**
-     * @param post the post to set
-     */
-    public void setPost(Post post) {
-        this.post = post;
+    
+    public void setPostList(Post newPost) {
+        postList.add(newPost);
     }
 
+    
+    public void addUser(User newUser) {
+        members.add(newUser);
+    }
+    
     /**
      * @return the user
      */
-    public User getUser() {
-        return user;
+    public List<User> getUserList() {
+        return members;
     }
 
-    /**
-     * @param user the user to set
-     */
-    public void setUser(User user) {
-        this.user = user;
+
+    public void setUserList(List<User> newUser) {
+        members = newUser;
     }
 
     /**
@@ -115,8 +117,10 @@ public class Gruppo {
     
     @Override
     public boolean equals (Object altroGruppo) {
-        if (altroGruppo instanceof Gruppo)
-            if (this.getId() == ((Gruppo)altroGruppo).getId()) return true;
+        if(altroGruppo != null)
+            if (altroGruppo instanceof Gruppo)
+                if (this.getId() == ((Gruppo)altroGruppo).getId()) 
+                    return true;
         return false;
     }
 }

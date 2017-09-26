@@ -8,6 +8,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+    <c:set var="title" value="Login" scope="request"/>
     <head>
         <link rel="stylesheet" type="text/css" href="style.css" media="screen">
         <title>LOGIN</title>
@@ -23,23 +24,23 @@
             <jsp:include page="header.jsp"/>
 
             <div id="content">
-                
-                <c:if test="${invalidData == true}">
-                    <div id="invalidDataWarning">I dati inseriti non sono validi</div>
-                </c:if>
                     
                 <h2>LOGIN</h2>
                 <form action="Login" method="post" >
                     <div class="riga">
                         <label for="userName">Nome utente</label>
-                        <input type="text" id="userName" name="username"/>
+                        <input type="text" id="userName" name="username" placeholder="username" required/>
                     </div>
                     <div class="riga">
                         <label for="userPass">Password</label>
-                        <input type="password" id="userPass" name="password"/>
+                        <input type="password" id="userPass" name="password" placeholder="password" required/>
                     </div><br />
-                    <input type="submit" value="Login"/>
+                    <input type="submit" value="Login" id="bottoneLogin" name="bottonelogin"/>
                 </form>
+                                
+                <c:if test="${invalidData == true}">
+                    <div id="invalidDataWarning">I dati inseriti non sono validi</div>
+                </c:if>
             </div>
         </div>
     </body>

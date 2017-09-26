@@ -5,15 +5,21 @@
  */
 package com.nerdbook.classi;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  *
  * @author edoar
  */
 public class GruppoFactory {
-    
-    //Pattern Design Singleton
+
     private static GruppoFactory singleton;
 
     public static GruppoFactory getInstance() {
@@ -22,42 +28,171 @@ public class GruppoFactory {
         }
         return singleton;
     }
+    
+    
+    private String connectionString;
 
-    private ArrayList<Gruppo> listaGruppi = new ArrayList<Gruppo>();
+    private ArrayList<Gruppo> listaGruppi = new ArrayList<>();
     
     private GruppoFactory() {
-        
-        PostFactory postFactory = PostFactory.getInstance();
-        UserFactory userFactory = UserFactory.getInstance();
-        
-        //Creazione Gruppi
-        Gruppo gruppo1 = new Gruppo();
-        gruppo1.setName("Castlemaniaci");
-        gruppo1.setId(0);
-        gruppo1.setPost(postFactory.getPostById(2));
-        gruppo1.setUser(userFactory.getUserById(2));
-        gruppo1.setAmministratore(userFactory.getUserById(0));
-        
-        Gruppo gruppo2 = new Gruppo();
-        gruppo1.setName("Calistenici");
-        gruppo1.setId(1);
-        gruppo1.setPost(postFactory.getPostById(0));
-        gruppo1.setUser(userFactory.getUserById(1));
-        gruppo1.setAmministratore(userFactory.getUserById(0));
-        
-        listaGruppi.add(gruppo1);
-        listaGruppi.add(gruppo2);
-    }
+    }    
     
-    public Gruppo getGruppoById(int id) {
-        for (Gruppo gruppo : this.listaGruppi) {
-            if (gruppo.getId() == id) {
+    public Gruppo getGruppoById(int id){
+        try {
+            
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
+            
+            String query = "SELECT * FROM gruppo " + "WHERE id_gruppo = ?";
+        
+            PreparedStatement statement = connessione.prepareStatement(query);
+        
+            statement.setInt(1, id);
+        
+            ResultSet result = statement.executeQuery();
+            
+            if (result.next()) {
+                Gruppo gruppo = new Gruppo();
+                gruppo.setId(result.getInt("id_gruppo"));
+                gruppo.setName(result.getString("nome_gruppo"));
+                gruppo.setAmministratore(UserFactory.getInstance().getUserById(result.getInt("amministratore")));
+                gruppo.setUserList(GruppoFactory.getInstance().membriGruppo(result.getInt("id_gruppo")));
+                
+                statement.close();
+                connessione.close();
                 return gruppo;
             }
+
+            statement.close();
+            connessione.close();
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
         return null;
     }
     
     
+    
+    public List<Gruppo> getGruppoUserList(int id) {
+
+        List<Gruppo> listaGruppi = new ArrayList<>();
+
+        try {
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
+
+            String query = "SELECT * FROM gruppo_utente" + " JOIN gruppo"
+                    + " ON gruppo.id_gruppo = gruppo_utente.id_gruppo "
+                    + "WHERE gruppo_utente.utente_id = ? ";
+
+            PreparedStatement statement = connessione.prepareStatement(query);
+
+            statement.setInt(1, id);
+
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                Gruppo gruppo = new Gruppo();
+                gruppo.setId(result.getInt("id_gruppo"));
+                gruppo.setName(result.getString("nome_gruppo"));
+                gruppo.setAmministratore(UserFactory.getInstance().getUserById(result.getInt("amministratore")));
+                gruppo.setUserList(GruppoFactory.getInstance().membriGruppo(result.getInt("id_gruppo")));
+                listaGruppi.add(gruppo);
+            }
+            statement.close();
+            connessione.close();
+            return listaGruppi;
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+    
+    
+    public List<Gruppo> allGroups() {
+
+        List<Gruppo> listaGruppi = new ArrayList<>();
+
+        try {
+
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
+
+            String query = "SELECT * FROM gruppo";
+
+            PreparedStatement statement = connessione.prepareStatement(query);
+
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                Gruppo gruppo = new Gruppo();
+                gruppo.setId(result.getInt("id_gruppo"));
+                gruppo.setName(result.getString("nome_gruppo"));
+                gruppo.setAmministratore(UserFactory.getInstance().getUserById(result.getInt("fondatore")));
+                gruppo.setUserList(GruppoFactory.getInstance().membriGruppo(result.getInt("id_gruppo")));
+
+                listaGruppi.add(gruppo);
+            }
+
+            statement.close();
+            connessione.close();
+
+            return listaGruppi;
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+    
+    
+    public List<User> membriGruppo(int gruppo){
+    
+    List<User> listaMembri = new ArrayList<>();
+
+        try {
+
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
+
+            String query = "SELECT * FROM gruppo_utente" + " JOIN utente"
+                    + " ON utente.utente_id = gruppo_utente.utente_id "
+                    + "WHERE gruppo_utente.id_gruppo = ? ";
+
+            PreparedStatement statement = connessione.prepareStatement(query);
+
+            statement.setInt(1, gruppo);
+
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                User usr = new User();
+                usr.setId(result.getInt("utente_id"));
+                usr.setNome(result.getString("nome"));
+                usr.setCognome(result.getString("cognome"));
+                usr.setEmail(result.getString("email"));
+                usr.setPassword(result.getString("password"));
+                usr.setUrlFotoProfilo(result.getString("urlFotoProfilo"));
+                usr.setDataDiNascita(result.getString("dataDiNascita"));
+                usr.setFrasePresentazione(result.getString("frasePresentazione"));
+
+                listaMembri.add(usr);
+            }
+            statement.close();
+            connessione.close();
+            return listaMembri;
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return listaMembri;
+    }
+    
+    
+    public void setConnectionString(String s) {
+        this.connectionString = s;
+    }
+
+    public String getConnectionString() {
+        return this.connectionString;
+    }
     
 }

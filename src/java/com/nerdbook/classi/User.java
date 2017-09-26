@@ -5,6 +5,9 @@
  */
 package com.nerdbook.classi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author edoar
@@ -13,7 +16,7 @@ public class User {
     
     //Attributi
     private int id;
-    private String nome;
+    public String nome;
     private String cognome;
     private String email;
     private String urlFotoProfilo;
@@ -23,14 +26,11 @@ public class User {
     
     //Costruttore
     public User() {
-        id = 0;
-        nome = "";
-        cognome = "";
-        email = "";
-        urlFotoProfilo = "";
-        dataDiNascita = "";
-        password = "";
-        frasePresentazione = "";
+        this.nome = "";
+        this.cognome = "";
+        this.email = "";
+        this.dataDiNascita = "";
+        this.password = "";
     }
 
     /**
@@ -145,10 +145,18 @@ public class User {
         this.frasePresentazione = frasePresentazione;
     }
     
+    public String getNomeCognome() {
+        return this.nome + " " + this.cognome;
+    }
+    
     @Override
     public boolean equals (Object altroUser) {
-        if (altroUser instanceof User)
-            if (this.getId() == ((User)altroUser).getId()) return true;
+        if (altroUser != null) {
+            if (altroUser instanceof User) {
+                if (this.getId() == ((User)altroUser).getId()) 
+                    return true;
+            }
+        }
         return false;
     }
 }

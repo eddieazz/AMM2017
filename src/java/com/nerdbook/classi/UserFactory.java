@@ -5,7 +5,13 @@
  */
 package com.nerdbook.classi;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -13,7 +19,6 @@ import java.util.ArrayList;
  */
 public class UserFactory {
     
-    //Pattern Design Singleton
     private static UserFactory singleton;
 
     public static UserFactory getInstance() {
@@ -22,80 +27,203 @@ public class UserFactory {
         }
         return singleton;
     }
-
-    private ArrayList<User> listaUsers = new ArrayList<User>();
     
-      private UserFactory() {
-        //Creazione utenti
-
-        //Edoardo
-        User user1 = new User();
-        user1.setId(0);
-        user1.setNome("Edoardo");
-        user1.setCognome ("Azzaro");
-        user1.setEmail("edoardo.azzaro@gmail.com");
-        user1.setUrlFotoProfilo("images/edoardo.jpg");
-        user1.setDataDiNascita ("16/03/1988");
-        user1.setPassword("123");
-        user1.setFrasePresentazione("Nerd, studente di Informatica e membro della Giocomix Crew");
-        
-        //Alucard
-        User user2 = new User();
-        user2.setId(1);
-        user2.setNome("Alucard");
-        user2.setCognome ("Ţepeş");
-        user2.setEmail("alucard.sonofdracula@gmail.com");
-        user2.setUrlFotoProfilo("images/alucard.jpg");
-        user2.setDataDiNascita ("04/11/1413");
-        user2.setPassword("123");
-        user2.setFrasePresentazione("Figlio di Dracula, sostenitore dell'umanità!");
-        
-        //Richter
-        User user3 = new User();
-        user3.setId(2);
-        user3.setNome("Richter");
-        user3.setCognome ("Belmont");
-        user3.setEmail("richter.belmont@gmail.com");
-        user3.setUrlFotoProfilo("images/richter.jpg");
-        user3.setDataDiNascita ("13/09/1773");
-        user3.setPassword("123");
-        user3.setFrasePresentazione("Cacciatore di vampiri per professione!");
-        
-        //Utente incompleto
-        User user4 = new User();
-        user4.setId(3);
-        user4.setNome(null);
-        user4.setCognome (null);
-        user4.setEmail(null);
-        user4.setUrlFotoProfilo(null);
-        user4.setDataDiNascita (null);
-        user4.setPassword(null);
-        user4.setFrasePresentazione(null);
-        
-        listaUsers.add(user1);
-        listaUsers.add(user2);
-        listaUsers.add(user3);
-        listaUsers.add(user4);
+    private String connectionString;
     
-      }
+    private UserFactory() {
+    }
+    
       
-      public User getUserById(int id) {
-        for (User user : this.listaUsers) {
-            if (user.getId() == id) {
-                return user;
+    public User getUserById(int id) {
+        try {
+
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
+
+            String query = "SELECT * FROM utente" + " WHERE utente_id = ?";
+
+            PreparedStatement statement = connessione.prepareStatement(query);
+            statement.setInt(1, id);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                User usr = new User();
+                usr.setId(result.getInt("utente_id"));
+                usr.setNome(result.getString("nome"));
+                usr.setCognome(result.getString("cognome"));
+                usr.setEmail(result.getString("email"));
+                usr.setPassword(result.getString("password"));
+                usr.setUrlFotoProfilo(result.getString("urlFotoProfilo"));
+                usr.setDataDiNascita(result.getString("dataDiNascita"));
+                usr.setFrasePresentazione(result.getString("frasePresentazione"));
+
+                statement.close();
+                connessione.close();
+                return usr;
             }
+            
+            statement.close();
+            connessione.close();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
         return null;
     }
     
     public int getIdByUsernameAndPassword(String username, String password){
-        for(User user : this.listaUsers){
-            if(user.getNome().equals(username) && user.getPassword().equals(password)){
-                return user.getId();
+        try {
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
+
+            String query = "SELECT utente_id FROM utente" + " WHERE email = ? AND password = ?";
+
+            PreparedStatement statement = connessione.prepareStatement(query);
+
+            statement.setString(1, username);
+            statement.setString(2, password);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                int id = result.getInt("utente_id");
+
+                statement.close();
+                connessione.close();
+                return id;
             }
+
+            statement.close();
+            connessione.close();
+    
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
         return -1;
     }
-}
-
     
+    
+    public List<User> getRegisteredUser() {
+
+        List<User> registeredUserList = new ArrayList<>();
+        try {
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
+
+            String query = "SELECT * FROM utente";
+
+            PreparedStatement statement = connessione.prepareStatement(query);
+
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                User usr = new User();
+                usr.setId(result.getInt("utente_id"));
+                usr.setNome(result.getString("nome"));
+                usr.setCognome(result.getString("cognome"));
+                usr.setEmail(result.getString("email"));
+                usr.setPassword(result.getString("password"));
+                usr.setUrlFotoProfilo(result.getString("urlFotoProfilo"));
+                usr.setDataDiNascita(result.getString("dataDiNascita"));
+                usr.setFrasePresentazione(result.getString("frasePresentazione"));
+
+                registeredUserList.add(usr);
+            }
+
+            statement.close();
+            connessione.close();
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return registeredUserList;
+    }
+    
+    public List getUserList(String nome) {
+        List<User> listaUtentiRegistrati = new ArrayList<>();
+
+        try {
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
+
+            String query = "SELECT * FROM utente" + " WHERE nome LIKE ?";
+
+            PreparedStatement statement = connessione.prepareStatement(query);
+
+            statement.setString(1, "%" + nome + "%");
+
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                User usr = new User();
+                usr.setId(result.getInt("utente_id"));
+                usr.setNome(result.getString("nome"));
+                usr.setCognome(result.getString("cognome"));
+                usr.setPassword(result.getString("password"));
+                usr.setEmail(result.getString("email"));
+                usr.setUrlFotoProfilo(result.getString("urlFotoProfilo"));
+                usr.setDataDiNascita(result.getString("dataDiNascita"));
+                usr.setFrasePresentazione(result.getString("frasePresentazione"));
+
+                listaUtentiRegistrati.add(usr);
+            }
+
+            statement.close();
+            connessione.close();
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return listaUtentiRegistrati;
+    }
+    
+    
+    
+    public void setDatiProfilo(String nome, String cognome, String dataDiNascita, String password, String frasePresentazione, int id) {
+
+        try {
+
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
+
+            if (frasePresentazione.length() > 0) {
+                String query = "UPDATE utente"
+                        + " SET nome = ?, cognome = ?, dataDiNascita = ?, password = ?, frasePresentazione = ?"
+                        + " WHERE utente_id = ?";
+
+                PreparedStatement statement = connessione.prepareStatement(query);
+
+                statement.setString(1, nome);
+                statement.setString(2, cognome);
+                statement.setString(3, dataDiNascita);
+                statement.setString(4, password);
+                statement.setString(5, frasePresentazione);
+                statement.setInt(6, id);
+
+                statement.executeUpdate();
+            } else {
+                String query = "UPDATE utente"
+                        + " SET nome = ?, cognome = ?, dataDiNascita = ?, password = ?"
+                        + " WHERE utente_id = ?";
+
+                PreparedStatement statement = connessione.prepareStatement(query);
+
+                statement.setString(1, nome);
+                statement.setString(2, cognome);
+                statement.setString(3, dataDiNascita);
+                statement.setString(4, password);
+                statement.setInt(5, id);
+
+                statement.executeUpdate();
+
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public void setConnectionString(String s) {
+        this.connectionString = s;
+    }
+
+    public String getConnectionString() {
+        return this.connectionString;
+    }   
+}  

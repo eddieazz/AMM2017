@@ -8,6 +8,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+    <c:set var="title" value="Profilo" scope="request"/>
     <head>
         <link rel="stylesheet" type="text/css" href="style.css" media="screen">
         <title>Profilo</title>
@@ -62,6 +63,7 @@
                         </div>
                         <input type="submit" value="Iscriviti"/>
                     </form>
+                    ${risultatoProfilo}
                 </div>
             </div>    
         </div>

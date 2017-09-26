@@ -8,6 +8,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+    <c:set var="title" value="Bacheca" scope="request"/>
     <head>
         <link rel="stylesheet" type="text/css" href="style.css" media="screen">
         <title>Bacheca</title>
@@ -33,42 +34,22 @@
             <jsp:include page="sidebar.jsp"/>
             
             <div id="content">
-                                
-                <div id="formNewPost">
-                    <form action="servlet.java" method="post" >
-                        <div>
-                            <label for="textPost">Testo nuovo post</label>
-                            <input type="text" name="postType" value="textType" id="textType">
-                        </div>
-                        <div>
-                            <label for="urlPost">URL allegato</label>
-                            <input type="text" name="postType" value="urlType"  id="urlType">
-                        </div>
-
-                        <div>
-                            <label for="imgType">Post con Foto</label>
-                            <input type="radio" name="postType" value="imgType" id="imgType">
-                            <label for="linkType">Link</label>
-                            <input type="radio" name="postType" value="linkType" id="linkType">
-                        </div>
-                        <br>
-                        <br>
-                        <input type="submit" value="Crea Post"/>
-                    </form>
-                </div>
-               
-                <br />
-                <br />
-                
+                <jsp:include page="nuovopost.jsp"/>
                 <!--lista dei post-->
                 <div id="posts">
                     <c:forEach var="post" items="${posts}">
                         <div class="post">
-                            <c:if test="${post.postType == 'TEXT'}">
-                                <p>${post.content}</p>
-                            </c:if>
+                            <p class="autorepost">${post.getUser().nome} ${post.getUser().cognome}</p>
+                            <form action="Bacheca" method="post">
+                                <div class="formcancellapost">
+                                    <c:if test="${loggedUser.getNomeCognome() == post.getUser().getNomeCognome()}">
+                                        <button type="submit" id="cancellapost" name="cancellapost" value="${post.getId()}">X</button>
+                                    </c:if>
+                                </div>
+                            </form>
+                            <p>${post.contenutoPost}</p>
                             <c:if test="${post.postType == 'IMAGE'}">
-                                <img alt="Post con foto" src="${post.content}">
+                                <img id="immagini" src="${post.imagePost}"  alt="Post con foto">
                             </c:if>
                         </div>
                     </c:forEach>

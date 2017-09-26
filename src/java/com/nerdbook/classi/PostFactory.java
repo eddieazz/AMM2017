@@ -5,6 +5,11 @@
  */
 package com.nerdbook.classi;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +19,6 @@ import java.util.List;
  */
 public class PostFactory {
 
-    //Pattern Design Singleton
     private static PostFactory singleton;
 
     public static PostFactory getInstance() {
@@ -24,68 +28,154 @@ public class PostFactory {
         return singleton;
     }
 
-    private ArrayList<Post> listaPost = new ArrayList<Post>();
+    private String connectionString;
+    
+    private ArrayList<Post> listaPost = new ArrayList<>();
     
     private PostFactory() {
-        
+    }
+
+    public Post getPostById(int id) {
         UserFactory userFactory = UserFactory.getInstance();
 
-        //Creazione Post
-        Post post1 = new Post();
-        post1.setContent("Proviamo questo nuovo social!");
-        post1.setId(0);
-        post1.setUser(userFactory.getUserById(0));
+        try{
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
 
-        Post post2 = new Post();
-        post2.setContent("img/trueblood.jpg");
-        post2.setId(1);
-        post2.setUser(userFactory.getUserById(1));
-        post2.setPostType(Post.Type.IMAGE);
+            String query = "SELECT * FROM posts " + "JOIN tipoDiPost ON posts.tipo = tipoDiPost.id_tipoDiPost "
+                    + "WHERE id_post = ?";
 
-        Post post3 = new Post();
-        post3.setContent("http://fantasyanime.com/valhalla/castlevaniasotn/images/castlevsotnMap-Castle1_25x.jpg");
-        post3.setId(2);
-        post3.setUser(userFactory.getUserById(2));
-        post3.setPostType(Post.Type.IMAGE);
-        
-        
-        listaPost.add(post1);
-        listaPost.add(post2);
-        listaPost.add(post3);
-    }
-    
-    public Post getPostById(int id) {
-        for (Post post : this.listaPost) {
-            if (post.getId() == id) {
+            PreparedStatement statement = connessione.prepareStatement(query);
+
+            statement.setInt(1, id);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                Post post = new Post();
+
+                post.setId(result.getInt("id_post"));
+                post.setContent(result.getString("content"));
+                post.setImagePost(result.getString("imagePost"));
+                post.setPostType(this.postTypeFromString(result.getString("nome_tipoDiPost")));
+
+                User autore = UserFactory.getInstance().getUserById(result.getInt("amministratore"));
+                post.setUser(autore);
+
+                statement.close();
+                connessione.close();
                 return post;
             }
+
+            statement.close();
+            connessione.close();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
         return null;
+            
     }
+
+
 
     public List getPostList(User usr) {
 
-        List<Post> listaPost = new ArrayList<Post>();
+        List<Post> listaPost = new ArrayList<>();
 
-        for (Post post : this.listaPost) {
-            if (post.getUser().equals(usr)) {
+
+        try {
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
+
+            String query = "SELECT * FROM posts " + "JOIN tipoDiPost ON posts.tipo = tipoDiPost.id_tipoDiPost "
+                    + "WHERE autore = ?" + " order by id_post DESC";
+
+            PreparedStatement statement = connessione.prepareStatement(query);
+
+            statement.setInt(1, usr.getId());
+
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+
+                Post post = new Post();
+                post.setId(result.getInt("id_post"));
+                post.setContent(result.getString("content"));
+                post.setImagePost(result.getString("imagePost"));
+                post.setPostType(this.postTypeFromString(result.getString("nome_tipoDiPost")));
+                post.setUser(usr);
+
                 listaPost.add(post);
             }
+
+            statement.close();
+            connessione.close();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
         return listaPost;
     }
     
-    /*
-    public List getPostList(Gruppo grp) {
-        
-        List<Post> listaPost = new ArrayList<Post>();
-        
-        for (Post post : this.listaPost) {
-            if (post.getUser().equals(grp)) {
-                listaPost.add(post);
-            }
+    
+    public void addPost(Post post) {
+
+        try {
+            Connection connessione = DriverManager.getConnection(connectionString, "edoardo", "edoardo");
+
+            String query = "INSERT INTO posts(id_post, testoPost, immaginePost, tipo, autore)"
+                    + " VALUES (default, ?, ?, ?, ?)";
+
+            PreparedStatement statement = connessione.prepareStatement(query);
+
+            statement.setString(1, post.getContent());
+            statement.setString(2, post.getImagePost());
+            statement.setInt(3, this.postTypeFromEnum(post.getPostType()));
+            statement.setInt(4, post.getUser().getId());
+
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
-        return listaPost;
     }
-    */
+    
+    
+    public void deletePost(int id) {
+
+        try {
+            Connection connessione = DriverManager.getConnection(connectionString, "luca", "luca");
+
+            String query = "DELETE FROM posts" + " WHERE id_post = ? ";
+
+            PreparedStatement statement = connessione.prepareStatement(query);
+
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    
+    private Post.Type postTypeFromString(String tipo) {
+
+        if (tipo.equals("IMAGE")) {
+            return Post.Type.IMAGE;
+        }
+        return Post.Type.TEXT;
+    }
+    
+    private int postTypeFromEnum(Post.Type type) {
+        //È realizzabile in modo più robusto rispetto all'hardcoding degli indici
+        if (type == Post.Type.TEXT) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+    
+    public void setConnectionString(String s) {
+        this.connectionString = s;
+    }
+
+    public String getConnectionString() {
+        return this.connectionString;
+    }
 }

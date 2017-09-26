@@ -9,6 +9,8 @@ import com.nerdbook.classi.Post;
 import com.nerdbook.classi.PostFactory;
 import com.nerdbook.classi.User;
 import com.nerdbook.classi.UserFactory;
+import com.nerdbook.classi.Gruppo;
+import com.nerdbook.classi.GruppoFactory;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -22,7 +24,7 @@ import javax.servlet.http.HttpSession;
  * @author edoar
  */
 public class Bacheca extends HttpServlet {
-
+    Post post;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -37,41 +39,72 @@ public class Bacheca extends HttpServlet {
         
         response.setContentType("text/html;charset=UTF-8");
         
-        HttpSession session = request.getSession(false);
-        
-        //se la sessione esiste ed esiste anche l'attributo loggedIn impostato a true
-        if(session!=null && session.getAttribute("loggedIn")!=null && session.getAttribute("loggedIn").equals(true))
-        {
-            //controllo se è impostato il parametro get "user" che mi consente
-            //di visualizzare una bacheca di uno specifico utente.
-            String user = request.getParameter("user");
-            
-            int userID;
+        if (Controlli.sessionExist(request)) {
+            //restituisco l'utente da visualizzare
+            User user = Controlli.getUser(request);
 
-            if(user != null){
-                userID = Integer.parseInt(user);
-            } else {
-                Integer loggedUserID = (Integer)session.getAttribute("loggedUserID");
-                userID = loggedUserID;
-            }
+            List<User> friends = UserFactory.getInstance().getRegisteredUser();
+            if (user != null) {
+                request.setAttribute("utente", user);
+                request.setAttribute("amiciUtente", friends);
+                request.setAttribute("UtenteLoggato", Controlli.getUserLogged(request));
 
-            User utente = UserFactory.getInstance().getUserById(userID);
-            if(utente != null){
-                request.setAttribute("utente", utente);
+                List<Gruppo> gruppi = GruppoFactory.getInstance().allGroups();
+                request.setAttribute("gruppiUtente", gruppi);
 
-                List<Post> posts = PostFactory.getInstance().getPostList(utente);
-                request.setAttribute("posts", posts);
+                if (request.getParameter("pubblicaPost") != null) {
+                    publicPost(request);
 
+                }
+                erasePost(request);
+
+                List<Post> elencoPost = PostFactory.getInstance().getPostList(user);
+                request.setAttribute("posts", elencoPost);
                 request.getRequestDispatcher("bacheca.jsp").forward(request, response);
             } else {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
-        }
-        else{
-            request.setAttribute("invalidData", true);
+        } else {
+            request.getRequestDispatcher("Login").forward(request, response);
         }
     }
 
+    
+    public void publicPost(HttpServletRequest request) {
+
+        User user = Controlli.getUser(request);
+
+        String testPost = request.getParameter("postDiTesto");
+        String imagePost = request.getParameter("postImmagine");
+
+        if (testPost.length() != 0 || imagePost.length() != 0) {
+            Post post = new Post();
+            post.setContent(testPost);
+            post.setImagePost(imagePost);
+            if (imagePost == null || imagePost.length() == 0) {
+                post.setPostType(Post.Type.TEXT);
+            } else {
+                post.setPostType(Post.Type.IMAGE);
+            }
+            post.setUser(user);
+            PostFactory.getInstance().addPost(post);
+            request.setAttribute("postPubblicatoConSuccesso", true);
+        } else {
+            String postvuoto = "Post Vuoto";
+            request.setAttribute("postVuoto", postvuoto);
+        }
+    }
+
+    public void erasePost(HttpServletRequest request) {
+
+        String erasingPost = request.getParameter("cancellaPost");
+
+        if (erasingPost != null) {
+            int delete = Integer.parseInt(erasingPost);
+            PostFactory.getInstance().deletePost(delete);
+        }
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
